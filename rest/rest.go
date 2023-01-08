@@ -4,12 +4,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RunAPI(address string) error { // Restful API 의 진입점 함수 , 이곳에 HTTP 라우팅을 정의한다
+func RunAPIWithHandler(address string, h HandlerInterface) error { // Restful API 의 진입점 함수 , 이곳에 HTTP 라우팅을 정의한다
 	r := gin.Default()
-	r.GET("/products", func(c *gin.Context) {})
-	r.GET("/promos", func(c *gin.Context) {})
-	r.POST("/users/signin", func(c *gin.Context) {})
-	r.POST("/users", func(c *gin.Context) {})
-	r.POST("/user/:id/signout", func(c *gin.Context) {})
-	r.GET("/user/:id/orders", func(c *gin.Context) {})
+	h, _ := NewHandler()
+	r.GET("/products", h.GetProducts)
+	r.GET("/promos", h.GetPromos)
+	r.POST("/users/signin", h.SignIn)
+	r.POST("/users", h.AddUser)
+	r.POST("/user/:id/signout", h.SignOut)
+	r.GET("/user/:id/orders", h.GetOrders)
+
+	return r.Run(address)
+}
+
+func RunAPI(address string) error {
+	h, err := NewHandler()
+	if err != nil {
+		return err
+	}
+	return RunAPIWithHandler(address, h)
 }

@@ -20,7 +20,7 @@ type HandlerInterface interface { // 핸들러의 모든 메서드를 포함하�
 }
 
 type Handler struct {
-	db dblayer.DBlayer
+	db dblayer.DBLayer
 }
 
 func NewHandler() (*Handler, error) {
